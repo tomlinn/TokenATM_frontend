@@ -3,7 +3,7 @@
       <el-row>
         <el-button size="medium" v-model="tokenNumber">Total Token: {{tokenNumber}}</el-button>
        <el-button type="warning"> check details</el-button>
-      <el-button type="info" icon="el-icon-message" circle></el-button>
+      <el-button type="info" icon="el-icon-message" circle @click="contact"></el-button>
     </el-row>  
         <div class="form-group">
           <el-table
@@ -70,6 +70,17 @@ import { watch } from 'fs';
 		    }
 		},
           methods: {
+            contact() {
+        this.$alert('If you have 3 tokens, contact teaching assistants csfs@uci.edu', 'Message', {
+          confirmButtonText: 'Done',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: `action: ${ action }`
+            });
+          }
+        });
+      },
           getAssignmentStatus() {
         this.$http({
           url: this.$http.adornUrl('/token/assignment_status/32718659'),
