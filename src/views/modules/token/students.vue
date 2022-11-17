@@ -3,9 +3,9 @@
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column prop="user_id" label="Student id" width="180">
         </el-table-column>
-        <el-table-column prop="user_name" label="Student name" width="180">
-        </el-table-column>
-        <el-table-column prop="token_amount" label="Student tokens" width="180">
+        <!-- <el-table-column prop="user_name" label="Student name" width="180">
+        </el-table-column> -->
+        <el-table-column prop="token_count" label="Student tokens" width="180">
         </el-table-column>
         <el-table-column prop="user_email" label="Student Email" width="180">
         </el-table-column>
@@ -32,7 +32,7 @@
           method: 'get',
   
         }).then(({ data }) => {
-          this.tableData = data.result
+          this.tableData = data
         })
       }
     },
