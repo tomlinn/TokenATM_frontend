@@ -1,26 +1,31 @@
 <template>
     <el-table
-      :data="tableData"
+      :data="tableData|forStatus"
       style="width: 100%">
       <el-table-column
-        prop="date"
-        label="Date"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="assignment_id"
-        label="Assignment ID"
-        width="180">
-      </el-table-column>
-      <el-table-column
         prop="name"
-        label="Name"
-        width="180">
+        label="Assignment Name"
+        width="150">
       </el-table-column>
       <el-table-column
-        prop="number"
-        label="token"
-        width="180">
+        prop="grade"
+        label="Grade"
+        width="150">
+      </el-table-column>
+      <el-table-column
+        prop="maxGrade"
+        label="Max Grade"
+        width="150">
+      </el-table-column>
+      <el-table-column
+        prop="status"
+        label="status"
+        width="150">
+      </el-table-column>
+      <el-table-column
+        prop="token_required"
+        label="Token Required"
+        width="150">
       </el-table-column>
     </el-table>
   </template>
@@ -29,24 +34,31 @@
     export default {
       data() {
         return {
-          tableData: [{
-            date: '2016-05-02',
-            name: 'Assignment1',
-            number: '2'
-          }, {
-            date: '2016-05-04',
-            name: 'Assignment2',
-            number: '2'
-          }, {
-            date: '2016-05-01',
-            name: 'Assignment3',
-            number: '1'
-          }, {
-            date: '2016-05-03',
-            name: 'Assignment4',
-            number: '2'
-          }]
+          tableData: []
         }
+      },
+      filters: {
+		    forStatus(listData){
+		        return listData.filter(function (item) {
+		            if(item.status == "requested"){
+		                return item;
+		            }
+		        })
+		    }
+		},
+      methods: {
+      getAssignmentStatus() {
+        this.$http({
+          url: this.$http.adornUrl('/token/assignment_status/32718659'),
+          method: 'get',
+  
+        }).then(({ data }) => {
+          console.log(data)
+          this.tableData = data
+        })
       }
+    },
+    mounted() { this.getAssignmentStatus()
+    },
     }
   </script>
