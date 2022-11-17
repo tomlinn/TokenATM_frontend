@@ -1,83 +1,62 @@
 <template>
-    <el-table
-      :data="tableData"
-      style="width: 100%"
-      :row-class-name="tableRowClassName">
-      <el-table-column
-        prop="date"
-        label="Date"
-        width="180">
+  <div>
+    <el-table :data="tableData" border style="width: 100%">
+      <el-table-column prop="userId" label="Student id" width="180">
       </el-table-column>
-      <el-table-column
-        prop="user_id"
-        label="User ID"
-        width="180">
+      <el-table-column prop="type" label="Type" width="180">
       </el-table-column>
-      <el-table-column
-        prop="address"
-        label="Assginment">
+      <el-table-column prop="source" label="Source" width="180">
       </el-table-column>
-      <el-table-column
-        prop="token_ccount"
-        label="Token Count">
+      <el-table-column prop="timestamp"  label="Time" width="180">
       </el-table-column>
-      <el-table-column
-        prop="Source"
-        label="source">
-      </el-table-column>
-      <el-table-column
-        prop="type"
-        label="Type">
+      <el-table-column prop="tokenCount" label="Token Need" width="180">
       </el-table-column>
     </el-table>
-  </template>
-  
-  <style>
-    .el-table .warning-row {
-      background: oldlace;
+  </div>
+</template>
+
+<script>
+
+export default {
+  components: {},
+  props: {},
+  data() {
+    return {
+      tableData: []
+    };
+  },
+  computed: {},
+  watch: {},
+  methods: {
+    formatTime(row, column){
+     let  date = row[column.property];
+     if(date === undefined){
+         return ''}
+     return (date).format("YYYY-MM-DD HH:mm:ss")
+    },
+    getCourses() {
+      this.$http({
+        url: this.$http.adornUrl('/token/logs'),
+        method: 'get',
+
+      }).then(({ data }) => {
+        this.tableData = data
+      })
     }
-  
-    .el-table .success-row {
-      background: #f0f9eb;
-    }
-  </style>
-  
-  <script>
-    export default {
-      methods: {
-        tableRowClassName({row, rowIndex}) {
-          if (rowIndex === 1) {
-            return 'warning-row'
-          } else if (rowIndex === 3) {
-            return 'success-row'
-          }
-          return ''
-        }
-      },
-      data() {
-        return {
-          tableData: [{
-            date: '2016-05-02',
-            name: 'Amy',
-            address: 'Assignment1',
-            token_count: '2'
-          }, {
-            date: '2016-05-04',
-            name: 'Bob',
-            address: 'Assignment2',
-            token_count: '2'
-          }, {
-            date: '2016-05-01',
-            name: 'Cindy',
-            address: 'Assignment3',
-            token_count: '2'
-          }, {
-            date: '2016-05-03',
-            name: 'David',
-            address: 'Assignment1',
-            token_count: '2'
-          }]
-        }
-      }
-    }
-  </script>
+  },
+  created() {  },
+  mounted() { this.getCourses()
+  },
+  beforeCreated() { },
+  beforeMounted() { },
+  beforeUpdate() { },
+  updated() { },
+  beforeDestory() { },
+  destoryed() { },
+  actived() { }
+}
+
+</script>
+<style lang='css' scoped>
+
+</style>
