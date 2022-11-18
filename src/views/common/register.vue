@@ -59,22 +59,50 @@
           form:{
               name:'',
               password:'',
+              email:'',
           },
         
       }
     },
     methods:{
         /*提交进行判断的函数 */
-        register:function(){
-            console.log("hello")
-            var item ={};
-          //获取到用户名
-          item.username=this.name;
-          //获取到密码
-          item.password=this.pwd;
-          //存储到用户列表
-          alert('Register Successfully!');
-        },
+        register:function()
+        {
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            this.$http({
+              url: this.$http.adornUrl('/sys/login'),
+              method: 'post',
+              data: this.$http.adornData({
+                'username': this.form.userName,
+                'password': this.form.password,
+                'email': this.form.email
+              })
+            }).then(({data}) => {
+              if (data && data.code === 0) {
+                this.$router.replace({ name: 'home' })
+                console.log(data)
+              } else {
+                console.log(data)
+                this.$message.error(data.msg)
+              }
+            })
+          }
+        })
+      },
+        // {
+        // // console.log("hello")
+        //     var item ={};
+        //   //获取到用户名
+        //   item.username=this.name;
+        //   //获取到密码
+        //   item.password=this.password;
+        //   item.password=this.email;
+        //   //存储到用户列表
+        //   alert('Register Successfully!');
+        //   console.log(item)
+        //   this.$router.push({ name: 'home' })
+        // }
     },
   }
   </script>
