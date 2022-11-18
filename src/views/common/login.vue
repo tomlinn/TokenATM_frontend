@@ -30,6 +30,7 @@
               <el-button class="login-btn-submit" type="primary" @click="dataFormSubmit()">Login</el-button>
             </el-form-item>
           </el-form>
+          <router-link to="/register">Go to register</router-link>
         </div>
       </div>
     </div>
