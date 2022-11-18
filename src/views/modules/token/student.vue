@@ -1,7 +1,7 @@
 <template> 
     <div>
       <el-row>
-        <el-button size="medium" v-model="tokenNumber">Total Token: {{tokenNumber}}</el-button>
+        <el-button size="medium" >Total Token: {{tokenNumber}}</el-button>
        <el-button type="warning"> check details</el-button>
       <el-button type="info" icon="el-icon-message" circle @click="contact"></el-button>
     </el-row>  
@@ -40,7 +40,7 @@
             width="150"
             label="Resubmit">
             <template slot-scope="scope">
-              <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="open(scope.row.name)" :disabled="scope.row.token_required >= 1 ">request resubmission</el-button>
+              <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="open(scope.row.name, scope.row.token_required)" :disabled="scope.row.token_required > tokenNumber ">request resubmission</el-button>
             </template>
           </el-table-column>
     </el-table>
@@ -58,9 +58,10 @@ import { watch } from 'fs';
             return {
               tableData: [],
               tokenNumber: 0,
+              userId:'32473866',
             }
           },
-          filters: {
+        filters: {
 		    forStatus(listData){
 		        return listData.filter(function (item) {
 		            if(item.status == "none" ){
@@ -70,7 +71,16 @@ import { watch } from 'fs';
 		    }
 		},
           methods: {
-            contact() {
+            getTokenNumber(){
+              this.$http({
+            url: this.$http.adornUrl('/token/tokens/'+this.userId),
+            method: 'get',
+          }).then(({ data }) => {
+            console.log(data)
+            this.tokenNumber = data.token_count
+          })
+            },
+           contact() {
         this.$alert('If you have 3 tokens, contact teaching assistants csfs@uci.edu', 'Message', {
           confirmButtonText: 'Done',
           callback: action => {
@@ -81,45 +91,59 @@ import { watch } from 'fs';
           }
         });
       },
-          getAssignmentStatus() {
+        getAssignmentStatus() {
         this.$http({
           url: this.$http.adornUrl('/token/assignment_status/32718659'),
           method: 'get',
   
         }).then(({ data }) => {
-          console.log(data)
           this.tableData = data
         })
       },
-          open() {
+       OverideAssignment(){
+        log.console("hello")
+       },
+       open(assignment_id, token) {
           this.$confirm('Do you want a resubmission?', 'Alert', {
           confirmButtonText: 'Yes',
           cancelButtonText: 'No',
           type: 'warning'
         }).then(() => {
-
-          this.$message({
+          assignment_id = 33741790
+        //to do 
+        //   this.$http({
+        //   url: this.$http.adornUrl('/spend/' + this.userId +'/' + assignment_id + '/' +token),
+        //   method: 'get',
+        // })
+      }).then(() => {
+           this.tokenNumber = this.tokenNumber - token,
+           window.open('https:\\canvas.eee.uci.edu/courses/39841/assignments/814000', '_blank'),
+           this.$message({
             type: 'success',
             message: 'get a resubmission link!'
-          });
-          window.open('https:\\google.com', '_blank');
-        }).catch(() => {
+          })}
+        ).catch((e) => {
+          console.log(e)
           this.$message({
             type: 'info',
             message: 'Cancel'
           });          
         });
-            }
-            },
-
-        computed: {
-        tokenNumber() {
-            return 0
-        }},
+      }
+      },
+      computed: {
+      userName: {
+        get () { return this.$store.state.user.name }
+      },
+      userId: {
+        get () { return this.$store.state.user.id }
+      },
+      },
         watch:{
 
         },
-    mounted() { this.getAssignmentStatus()
+    mounted() { this.getAssignmentStatus(),
+      this.getTokenNumber()
     },
     }
     </script>
