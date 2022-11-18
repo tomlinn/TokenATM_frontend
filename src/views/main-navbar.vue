@@ -91,7 +91,7 @@
       },
       // 退出
       logoutHandle () {
-        this.$confirm(`确定进行[退出]操作?`, '提示', {
+        this.$confirm(`confirm[exit]operation?`, 'hint', {
           confirmButtonText: 'confirm',
           cancelButtonText: 'cancel',
           type: 'warning'

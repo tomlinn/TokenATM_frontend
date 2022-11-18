@@ -147,7 +147,7 @@
         var ids = id ? [id] : this.dataListSelections.map(item => {
           return item.roleId
         })
-        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+        this.$confirm(`confim to[id=${ids.join(',')}]execute[${id ? 'delete' : 'batch delete'}]operation?`, 'hint', {
           confirmButtonText: 'confirm',
           cancelButtonText: 'cancel',
           type: 'warning'

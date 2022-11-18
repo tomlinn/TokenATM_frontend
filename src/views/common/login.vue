@@ -50,13 +50,13 @@
         },
         dataRule: {
           userName: [
-            { required: true, message: '帐号不能为空', trigger: 'blur' }
+            { required: true, message: 'account cannot be empty', trigger: 'blur' }
           ],
           password: [
-            { required: true, message: '密码不能为空', trigger: 'blur' }
+            { required: true, message: 'account cannot be empty', trigger: 'blur' }
           ],
           captcha: [
-            { required: true, message: '验证码不能为空', trigger: 'blur' }
+            { required: true, message: 'account cannot be empty', trigger: 'blur' }
           ]
         },
         captchaPath: ''

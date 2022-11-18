@@ -23,7 +23,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">cancel</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">cancel</el-button>
+      <el-button type="primary" @click="dataFormSubmit()">submit</el-button>
     </span>
   </el-dialog>
 </template>
