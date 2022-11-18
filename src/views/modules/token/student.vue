@@ -40,7 +40,7 @@
             width="150"
             label="Resubmit">
             <template slot-scope="scope">
-              <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="open(scope.row.name, scope.row.token_required)" :disabled="scope.row.token_required > tokenNumber ">request resubmission</el-button>
+              <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="open(scope.row, scope.$index)" :disabled="scope.row.token_required > tokenNumber ">request resubmission</el-button>
             </template>
           </el-table-column>
     </el-table>
@@ -103,20 +103,23 @@ import { watch } from 'fs';
        OverideAssignment(){
         log.console("hello")
        },
-       open(assignment_id, token) {
+       open(data,index) {
           this.$confirm('Do you want a resubmission?', 'Alert', {
           confirmButtonText: 'Yes',
           cancelButtonText: 'No',
           type: 'warning'
         }).then(() => {
-          assignment_id = 33741790
+          var assignment_id = 33741790
         //to do 
         //   this.$http({
         //   url: this.$http.adornUrl('/spend/' + this.userId +'/' + assignment_id + '/' +token),
         //   method: 'get',
         // })
       }).then(() => {
-           this.tokenNumber = this.tokenNumber - token,
+          data.status = "submitted"
+          // this.$set(this.tableData,index,row)
+          console.log(data.token_required)
+           this.tokenNumber = this.tokenNumber - data.token_required,
            window.open('https:\\canvas.eee.uci.edu/courses/39841/assignments/814000', '_blank'),
            this.$message({
             type: 'success',
