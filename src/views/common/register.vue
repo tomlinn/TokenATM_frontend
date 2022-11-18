@@ -65,7 +65,16 @@
     },
     methods:{
         /*提交进行判断的函数 */
-        register:function(){},
+        register:function(){
+            console.log("hello")
+            var item ={};
+          //获取到用户名
+          item.username=this.name;
+          //获取到密码
+          item.password=this.pwd;
+          //存储到用户列表
+          alert('Register Successfully!');
+        },
     },
   }
   </script>
