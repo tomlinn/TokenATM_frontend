@@ -72,8 +72,8 @@
         width="150"
         label="Operations">
         <template slot-scope="scope">
-          <el-button v-if="isAuth('sys:menu:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">修改</el-button>
-          <el-button v-if="isAuth('sys:menu:delete')" type="text" size="small" @click="deleteHandle(scope.row.menuId)">删除</el-button>
+          <el-button v-if="isAuth('sys:menu:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">update</el-button>
+          <el-button v-if="isAuth('sys:menu:delete')" type="text" size="small" @click="deleteHandle(scope.row.menuId)">delete</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -122,7 +122,7 @@
       },
       // 删除
       deleteHandle (id) {
-        this.$confirm(`确定对[id=${id}]进行[删除]操作?`, '提示', {
+        this.$confirm(`confirm to[id=${id}]execute[delete]operation?`, 'hint', {
           confirmButtonText: 'Confirm',
           cancelButtonText: 'Cancel',
           type: 'warning'
