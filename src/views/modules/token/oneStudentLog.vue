@@ -15,11 +15,11 @@
             </el-table-column> -->
             <el-table-column label="operation" prop="type" sortable  width="110">
             </el-table-column>
+            <el-table-column prop="tokenCount" label="token count" sortable>
+            </el-table-column>
             <el-table-column prop="source" label="assignment" sortable>
             </el-table-column>
             <el-table-column prop="timestamp" label="timestamp" sortable>
-            </el-table-column>
-            <el-table-column prop="tokenCount" label="used token" sortable>
             </el-table-column>
         </el-table>
 
