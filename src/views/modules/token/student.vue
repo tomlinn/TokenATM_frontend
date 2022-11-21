@@ -1,134 +1,137 @@
-<template>
-  <div>
-    <el-row>
+<template> 
+    <div>
+      <el-row>
       <el-button size="medium">Total Token: {{ tokenNumber }}</el-button>
-      <el-button type="warning"> check details</el-button>
+       <el-button type="warning"> check details</el-button>
       <el-button type="info" icon="el-icon-message" circle @click="contact"></el-button>
-    </el-row>
-    <div class="form-group">
+    </el-row>  
+        <div class="form-group">
       <el-table :data="tableData | forStatus" style="width: 100%">
         <el-table-column prop="name" label="Assignment Name" width="150">
-        </el-table-column>
+      </el-table-column>
         <el-table-column prop="grade" label="Grade" width="150">
-        </el-table-column>
+      </el-table-column>
         <el-table-column prop="maxGrade" label="Max Grade" width="150">
-        </el-table-column>
+      </el-table-column>
         <el-table-column prop="status" label="status" width="150">
-        </el-table-column>
+      </el-table-column>
         <el-table-column prop="token_required" label="Token Required" width="150">
-        </el-table-column>
+      </el-table-column>
         <el-table-column header-align="center" align="left" width="150" label="Resubmit">
-          <template slot-scope="scope">
+            <template slot-scope="scope">
             <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="open(scope.row, scope.$index)"
               :disabled="scope.row.token_required > tokenNumber">request resubmission</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
-
-  </div>
-
-</template>
+            </template>
+          </el-table-column>
+    </el-table>
+        </div>
     
-<script>
+    </div>
+    
+      </template>
+    
+      <script>
 import { watch } from 'fs';
 
-export default {
-  data() {
-    return {
-      tableData: [],
-      tokenNumber: 0,
-      userId: '32473866',
-    }
-  },
-  filters: {
+        export default {
+          data() {
+            return {
+              tableData: [],
+              tokenNumber: 0,
+      userId: '32465829',
+            }
+          },
+        filters: {
     forStatus(listData) {
-      return listData.filter(function (item) {
+		        return listData.filter(function (item) {
         if (item.status == "none") {
-          return item;
-        }
-      })
-    }
-  },
-  methods: {
+		                return item;
+		            }
+		        })
+		    }
+		},
+          methods: {
     getTokenNumber() {
-      this.$http({
+              this.$http({
         url: this.$http.adornUrl('/token/tokens/' + this.userId),
-        method: 'get',
-      }).then(({ data }) => {
-        console.log(data)
-        this.tokenNumber = data.token_count
-      })
-    },
-    contact() {
-      this.$alert('If you have 3 tokens, contact teaching assistants csfs@uci.edu', 'Message', {
-        confirmButtonText: 'Done',
-        callback: action => {
-          this.$message({
-            type: 'info',
+            method: 'get',
+          }).then(({ data }) => {
+            console.log(data)
+            this.tokenNumber = data.token_count
+          })
+            },
+           contact() {
+        this.$alert('If you have 3 tokens, contact teaching assistants teachingAssistant@uci.edu', 'Message', {
+          confirmButtonText: 'Done',
+          callback: action => {
+            this.$message({
+              type: 'info',
             message: `action: ${action}`
-          });
-        }
-      });
-    },
-    getAssignmentStatus() {
-      this.$http({
+            });
+          }
+        });
+      },
+        getAssignmentStatus() {
+        this.$http({
         url: this.$http.adornUrl('/token/assignment_status/32718659'),
-        method: 'get',
-
-      }).then(({ data }) => {
-        this.tableData = data
-      })
-    },
+          method: 'get',
+        }).then(({ data }) => {
+          this.tableData = data
+        })
+      },
     OverideAssignment() {
-      log.console("hello")
-    },
+        log.console("hello")
+       },
     open(data, index) {
-      this.$confirm('Do you want a resubmission?', 'Alert', {
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
-        type: 'warning'
-      }).then(() => {
-        var assignment_id = 33741790
+          this.$confirm('Do you want a resubmission?', 'Alert', {
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No',
+          type: 'warning'
+        }).then(() => {
+          var assignment_id = 33741790
         //to do 
-        //   this.$http({
-        //   url: this.$http.adornUrl('/spend/' + this.userId +'/' + assignment_id + '/' +token),
-        //   method: 'get',
-        // })
+          this.$http({
+          url: this.$http.adornUrl('/token/use_token/' + this.userId ),
+          method: 'post',
+          data: this.$http.adornData({
+                'assignment_id': data.assignment_id,
+                'token_count': data.token_required,
+              })
+        })
       }).then(() => {
-        data.status = "submitted"
-        // this.$set(this.tableData,index,row)
-        console.log(data.token_required)
-        this.tokenNumber = this.tokenNumber - data.token_required,
-          window.open('https:\\canvas.eee.uci.edu/courses/39841/assignments/814000', '_blank'),
-          this.$message({
+          data.status = "submitted"
+          // this.$set(this.tableData,index,row)
+          console.log(data.token_required)
+           this.tokenNumber = this.tokenNumber - data.token_required,
+           window.open('https:\\canvas.eee.uci.edu/courses/39841/assignments/814000', '_blank'),
+           this.$message({
             type: 'success',
             message: 'get a resubmission link!'
           })
       }
-      ).catch((e) => {
-        console.log(e)
-        this.$message({
-          type: 'info',
-          message: 'Cancel'
+        ).catch((e) => {
+          console.log(e)
+          this.$message({
+            type: 'info',
+            message: 'Cancel'
+          });          
         });
-      });
-    }
-  },
-  computed: {
-    userName: {
+      }
+      },
+      computed: {
+      userName: {
       get() { return this.$store.state.user.name }
-    },
-    userId: {
+      },
+      userId: {
       get() { return this.$store.state.user.id }
-    },
-  },
+      },
+      },
   watch: {
 
-  },
+        },
   mounted() {
     this.getAssignmentStatus(),
-    this.getTokenNumber()
-  },
-}
-</script>
+      this.getTokenNumber()
+    },
+    }
+    </script>
