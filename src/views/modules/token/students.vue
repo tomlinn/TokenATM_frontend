@@ -1,6 +1,12 @@
 <template>
     <div>
+        <el-button @click="sync()">manually sync</el-button>
         <el-table :data="tableData" border style="width: 100%">
+            <template slot="empty">
+                <el-empty description="empty">
+                    <span>empty~</span>
+                </el-empty>
+            </template>
             <el-table-column prop="user_id" label="Student id" width="180">
             </el-table-column>
             <el-table-column prop="user_name" label="Student name" width="180">
@@ -81,6 +87,14 @@ export default {
         updateToken(student_id) {
             this.dialogVisible = true
             this.dataForm.user_id = student_id
+        },
+        sync() {
+            this.$http({
+                url: this.$http.adornUrl('/token/sync'),
+                method: 'get'
+            }).then(({ data }) => {
+                alert("sync successfully")
+            })
         }
     },
     created() { },
