@@ -2,7 +2,7 @@
     <div>
       <el-row>
       <el-button size="medium">Total Token: {{ tokenNumber }}</el-button>
-       <el-button type="warning"> check details</el-button>
+       <!-- <el-button type="warning" @click:this.$router.push()> check details</el-button> -->
       <el-button type="info" icon="el-icon-message" circle @click="contact"></el-button>
     </el-row>  
         <div class="form-group">
