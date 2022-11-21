@@ -49,7 +49,7 @@
       methods: {
       getAssignmentStatus() {
         this.$http({
-          url: this.$http.adornUrl('/token/assignment_status/32718659'),
+          url: this.$http.adornUrl('/token/assignment_status/32465829'),
           method: 'get',
   
         }).then(({ data }) => {

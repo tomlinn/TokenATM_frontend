@@ -17,6 +17,8 @@
       </el-table-column>
         <el-table-column prop="token_required" label="Token Required" width="150">
       </el-table-column>
+        <el-table-column prop="deadline" label="Deadline" width="150">
+      </el-table-column>
         <el-table-column header-align="center" align="left" width="150" label="Resubmit">
             <template slot-scope="scope">
             <el-button  type="text" size="small" @click="open(scope.row, scope.$index)"
@@ -42,13 +44,13 @@ import { watch } from 'fs';
             }
           },
         filters: {
-    forStatus(listData) {
-		        return listData.filter(function (item) {
-        if (item.status == "none") {
-		                return item;
-		            }
-		        })
-		    }
+      forStatus(tableData) {
+              return tableData.filter(function (item) {
+          if (item.status == "none") {
+                    return item;
+                  }
+              })
+          }
 		},
           methods: {
     getTokenNumber() {
@@ -73,9 +75,10 @@ import { watch } from 'fs';
       },
         getAssignmentStatus() {
         this.$http({
-        url: this.$http.adornUrl('/token/assignment_status/32718659'),
+        url: this.$http.adornUrl('/token/assignment_status/32465829'),
           method: 'get',
         }).then(({ data }) => {
+          console.log(data)
           this.tableData = data
         })
       },
