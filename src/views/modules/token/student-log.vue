@@ -1,5 +1,8 @@
 <template>
     <div>
+        <el-input v-model="dataForm.student_id" placeholder="student id">
+        </el-input>
+        <el-button @click="getLogsById()">search</el-button>
         <el-table :data="tableData" border style="width: 100%">
             <el-table-column prop="id" label="Log id">
             </el-table-column>
@@ -16,7 +19,6 @@
             <el-table-column prop="tokenCount" label="used token">
             </el-table-column>
         </el-table>
-
     </div>
 </template>
 
@@ -26,15 +28,18 @@ export default {
     props: {},
     data() {
         return {
-            tableData: []
+            dataForm: {
+                student_id: 0
+            },
+            tableData:[]
         };
     },
     computed: {},
     watch: {},
-    methods: {
-        getLogs() {
+    methods: {  
+        getLogsById() {
             this.$http({
-                url: this.$http.adornUrl('/token/logs'),
+                url: this.$http.adornUrl('/token/logs/'+this.dataForm.student_id),
                 method: 'get',
             }).then(({ data }) => {
                 this.tableData = data
@@ -42,7 +47,7 @@ export default {
         }
     },
     created() { },
-    mounted() { this.getLogs() },
+    mounted() { },
     beforeCreated() { },
     beforeMounted() { },
     beforeUpdate() { },
