@@ -2,6 +2,11 @@
     <el-table
       :data="tableData|forStatus"
       style="width: 100%">
+      <template slot="empty">
+                <el-empty description="empty">
+                    <span>empty~</span>
+                </el-empty>
+            </template>
       <el-table-column
         prop="name"
         label="Assignment Name"

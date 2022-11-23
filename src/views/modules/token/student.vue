@@ -7,6 +7,11 @@
     </el-row>  
         <div class="form-group">
       <el-table :data="tableData | forStatus" style="width: 100%">
+        <template slot="empty">
+                <el-empty description="empty">
+                    <span>empty~</span>
+                </el-empty>
+            </template>
         <el-table-column prop="name" label="Assignment Name" width="150">
       </el-table-column>
         <el-table-column prop="grade" label="Grade" width="150">
