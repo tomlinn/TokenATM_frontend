@@ -12,7 +12,7 @@
             <el-row type="flex" justify="center">
                 <el-col :span="5">
                     <el-form-item label="Your Name:" prop="name">
-                        <el-input v-model="form.name" size="small"></el-input>
+                        <el-input v-model="form.username" size="small"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -71,12 +71,16 @@
         this.$refs['form'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl('/sys/login'),
+              url: this.$http.adornUrl('/sys/user/save'),
               method: 'post',
               data: this.$http.adornData({
-                'username': this.form.userName,
+                'username': this.form.username,
                 'password': this.form.password,
-                'email': this.form.email
+                'email': this.form.email,
+                'mobile': "00000000000",
+                'status': 1,
+                'roleIdList': [],
+                'salt': ""
               })
             }).then(({data}) => {
               if (data && data.code === 0) {

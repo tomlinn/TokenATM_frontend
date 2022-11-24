@@ -9,7 +9,7 @@ const http = axios.create({
   timeout: 1000 * 30,
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/json; charset=utf-8'
+    'Content-Type': 'application/json; charset=utf-8',
   }
 })
 
@@ -18,6 +18,10 @@ const http = axios.create({
  */
 http.interceptors.request.use(config => {
   config.headers['token'] = Vue.cookie.get('token') // 请求头带上token
+
+  if (config.url.includes("user/save")) {
+    config.headers['token'] = 'I\'m the token haha'
+  }
   return config
 }, error => {
   return Promise.reject(error)
