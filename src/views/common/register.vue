@@ -33,8 +33,24 @@
 
             <el-row type="flex" justify="center">
                 <el-col :span="5">
+                    <el-form-item label="Verification:" prop="verification">
+                        <el-input v-model="form.verification" size="small"></el-input>
+                    </el-form-item>
+                </el-col>
+
+            </el-row>
+
+            <el-row type="flex" justify="center">
+              <el-col :span="5">
                     <el-form-item>
-                        <el-button @click="register">register</el-button>
+                        <el-button @click="requestCode">Request code</el-button>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row type="flex" justify="center">
+                <el-col :span="4">
+                    <el-form-item>
+                        <el-button @click="register">Register</el-button>
                     </el-form-item>
                 </el-col>
                 <el-col :span="5">
@@ -65,11 +81,58 @@
       }
     },
     methods:{
-        /*提交进行判断的函数 */
+        requestCode:function()
+        {
+          this.$refs['form'].validate((valid) => {
+          if (valid) {
+            if (!this.form.email.endsWith("@uci.edu")) {
+              this.$message({
+                    type: 'error',
+                    message: 'Invalid email address, please use an UCI email address'
+                  })
+            } else {
+              this.$http({
+                url: this.$http.adornUrl('/token/request_verification'),
+                method: 'post',
+                data: this.$http.adornData({
+                  'email': this.form.email
+                })
+              }).then(({data}) => {
+                if (data && data.status == "success") {
+                  this.$message({
+                    type: 'success',
+                    message: 'Verification code sent, please check your email'
+                  })
+                }
+              })
+            }
+          }
+        })
+        },
+
         register:function()
         {
+          //verify code is correct
+          this.$http({
+                url: this.$http.adornUrl('/token/verify'),
+                method: 'post',
+                data: this.$http.adornData({
+                  'email': this.form.email,
+                  'verification': this.form.verification
+                })
+              }).then(({data}) => {
+                if (data && data.status == "success") {
+                  this.$message({
+                    type: 'success',
+                    message: 'Register success'
+                  })
+                  this.$router.replace({ name: 'login' })
+                }
+              })
+
         this.$refs['form'].validate((valid) => {
           if (valid) {
+          
             this.$http({
               url: this.$http.adornUrl('/sys/user/save'),
               method: 'post',
