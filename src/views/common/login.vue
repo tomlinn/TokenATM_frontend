@@ -30,7 +30,14 @@
               <el-button class="login-btn-submit" type="primary" @click="dataFormSubmit()">Login</el-button>
             </el-form-item>
           </el-form>
+          <div style="display: flex;">
+          <div style="display: flex; width: 50%; justify-content: start;">
           <router-link to="/register">Go to register</router-link>
+          </div>
+          <div style="display: flex; width: 50%; justify-content: end;">
+          <router-link to="/forget">Forgot password?</router-link>
+          </div>
+          </div>
         </div>
       </div>
     </div>
