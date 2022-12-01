@@ -19,7 +19,7 @@ const http = axios.create({
 http.interceptors.request.use(config => {
   config.headers['token'] = Vue.cookie.get('token') // 请求头带上token
 
-  if (config.url.includes("user/save")) {
+  if (config.url.includes("user/save") || config.url.includes("user/forget_password")) {
     config.headers['token'] = 'I\'m the token haha'
   }
   return config

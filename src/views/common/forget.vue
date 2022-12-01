@@ -119,30 +119,26 @@ export default {
             if (data && data.status == "success") {
               //new save request
               this.$http({
-                url: this.$http.adornUrl('/sys/user/save'),
+                url: this.$http.adornUrl('/sys/user/forget_password'),
                 method: 'post',
                 data: this.$http.adornData({
-                  'username': this.form.email,
                   'password': this.form.newpassword,
-                  'email': this.form.email,
-                  'mobile': "00000000000",
-                  'status': 1,
-                  'roleIdList': [],
-                  'salt': ""
+                  'email': this.form.email
                 })
               }).then(({ data }) => {
                 if (data && data.code === 0) {
                   this.$router.replace({ name: 'home' })
                   console.log(data)
+                  this.$message({
+                type: 'success',
+                message: 'Password reset success'
+              })
                 } else {
                   console.log(data)
                   this.$message.error(data.msg)
                 }
               })
-              this.$message({
-                type: 'success',
-                message: 'Password reset success'
-              })
+
             } else {
               console.log(data)
               this.$message.error(data.msg)

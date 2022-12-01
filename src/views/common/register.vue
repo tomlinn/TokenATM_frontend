@@ -128,7 +128,7 @@ export default {
                   'email': this.form.email,
                   'mobile': "00000000000",
                   'status': 1,
-                  'roleIdList': [],
+                  'roleIdList': [2],
                   'salt': ""
                 })
               }).then(({ data }) => {
