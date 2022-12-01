@@ -123,7 +123,7 @@ export default {
                 url: this.$http.adornUrl('/sys/user/save'),
                 method: 'post',
                 data: this.$http.adornData({
-                  'username': this.form.username,
+                  'username': this.form.email,
                   'password': this.form.password,
                   'email': this.form.email,
                   'mobile': "00000000000",
