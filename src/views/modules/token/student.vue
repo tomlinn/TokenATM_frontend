@@ -111,7 +111,7 @@ import { watch } from 'fs';
           // this.$set(this.tableData,index,row)
           console.log(data.token_required)
            this.tokenNumber = this.tokenNumber - data.token_required,
-           window.open('https:\\canvas.eee.uci.edu/courses/39841/assignments/814000', '_blank'),
+           window.open('https:\\canvas.eee.uci.edu/courses/3737733/assignments/'+ data.assignment_id, '_blank'),
            this.$message({
             type: 'success',
             message: 'get a resubmission link!'
