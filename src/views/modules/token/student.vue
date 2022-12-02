@@ -59,6 +59,7 @@ import { watch } from 'fs';
 		},
           methods: {
     getTokenNumber() {
+      console.log("id hhhhh" + userId),
               this.$http({
         url: this.$http.adornUrl('/token/tokens/' + this.userId),
             method: 'get',
@@ -137,5 +138,18 @@ import { watch } from 'fs';
     this.getAssignmentStatus(),
     this.getTokenNumber()
     },
+    // 解决刷新页面vuex内数据丢失
+  created(){
+    //在页面加载时读取sessionStorage里的状态信息
+    let sessionStorage = window.sessionStorage;
+    if (sessionStorage.getItem("store") ) {
+      this.$store.replaceState(Object.assign({}, this.$store.state,JSON.parse(sessionStorage.getItem("store"))))
+    }
+
+    //在页面刷新时将vuex里的信息保存到sessionStorage里
+    window.addEventListener("beforeunload",()=>{
+      sessionStorage.setItem("store",JSON.stringify(this.$store.state))
+    })
+  }
     }
     </script>
