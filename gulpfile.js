@@ -4,7 +4,7 @@ var path = require('path');
 var del  = require('del');
 
 var distPath    = path.resolve('./dist');
-var version     = ''; // 版本号
+var version     = ''; // 版本号chart.png
 var versionPath = ''; // 版本号路径
 var env         = ''; // 运行环境
 
