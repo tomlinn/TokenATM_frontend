@@ -80,7 +80,7 @@ import { watch } from 'fs';
       },
         getAssignmentStatus() {
         this.$http({
-        url: this.$http.adornUrl('/token/assignment_status/32465829'),
+        url: this.$http.adornUrl('/token/assignment_status/'+ this.userId),
           method: 'get',
         }).then(({ data }) => {
           console.log(data)
@@ -127,12 +127,6 @@ import { watch } from 'fs';
       }
       },
       computed: {
-      userName: {
-      get() { return this.$store.state.user.name }
-      },
-      userId: {
-      get() { return this.$store.state.user.id }
-      },
       },
   watch: {
 
