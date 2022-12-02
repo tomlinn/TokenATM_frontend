@@ -40,7 +40,7 @@ export default {
     methods: {
         getLogs() {
             this.$http({
-                url: this.$http.adornUrl('/token/logs/32465829'),
+                url: this.$http.adornUrl('/token/logs/' +  this.$store.state.user.studentID),
                 method: 'get',
             }).then(({ data }) => {
                 this.tableData = data

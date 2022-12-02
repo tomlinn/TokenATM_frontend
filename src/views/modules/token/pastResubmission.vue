@@ -54,7 +54,7 @@
       methods: {
       getAssignmentStatus() {
         this.$http({
-          url: this.$http.adornUrl('/token/assignment_status/32465829'),
+          url: this.$http.adornUrl('/token/assignment_status/' + this.$store.state.user.studentID),
           method: 'get',
   
         }).then(({ data }) => {

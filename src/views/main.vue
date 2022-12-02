@@ -52,6 +52,10 @@
         get () { return this.$store.state.user.id },
         set (val) { this.$store.commit('user/updateId', val) }
       },
+      studentID: {
+        get () { return this.$store.state.user.studentID },
+        set (val) { this.$store.commit('user/updateStudentId', val) }
+      },
       userName: {
         get () { return this.$store.state.user.name },
         set (val) { this.$store.commit('user/updateName', val) }
@@ -82,7 +86,22 @@
             this.loading = false
             this.userId = data.user.userId
             this.userName = data.user.username
+            this.$http({
+              url: this.$http.adornUrl('/token/userid/'),
+              method: 'post',
+              data: this.$http.adornData({
+                'email': this.userName
+              })
+        }).then(({data}) =>{
+          //  to do: need to change to correct student id
+          this.studentID = data.id
+          if(this.studentID == -1){
+            this.studentID = 32465829
           }
+          console.log("studentid",  this.studentID)
+        }
+        )
+      }
         })
       }
     }

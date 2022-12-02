@@ -45,7 +45,7 @@ import { watch } from 'fs';
             return {
               tableData: [],
               tokenNumber: 0,
-      userId: '32465829',
+              userId: this.$store.state.user.studentID,
             }
           },
         filters: {
