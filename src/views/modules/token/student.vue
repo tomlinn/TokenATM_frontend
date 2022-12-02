@@ -65,7 +65,9 @@ import { watch } from 'fs';
           }).then(({ data }) => {
             console.log(data)
             this.tokenNumber = data.token_count
-          })
+          }).catch((e) => {
+          console.log(e)        
+        });
             },
            contact() {
         this.$alert('If you have 3 tokens, contact teaching assistants teachingAssistant@uci.edu', 'Message', {
@@ -111,7 +113,7 @@ import { watch } from 'fs';
           // this.$set(this.tableData,index,row)
           console.log(data.token_required)
            this.tokenNumber = this.tokenNumber - data.token_required,
-           window.open('https:\\canvas.eee.uci.edu/courses/3737733/assignments/'+ data.assignment_id, '_blank'),
+           window.open('https:\\canvas.instructure.com/courses/3737733/assignments/'+ data.resubmission_id, '_blank'),
            this.$message({
             type: 'success',
             message: 'get a resubmission link!'
@@ -133,7 +135,7 @@ import { watch } from 'fs';
         },
   mounted() {
     this.getAssignmentStatus(),
-      this.getTokenNumber()
+    this.getTokenNumber()
     },
     }
     </script>
