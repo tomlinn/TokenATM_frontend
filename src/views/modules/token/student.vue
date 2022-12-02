@@ -27,7 +27,7 @@
         <el-table-column header-align="center" align="left" width="150" label="Resubmit">
             <template slot-scope="scope">
             <el-button  type="text" size="small" @click="open(scope.row, scope.$index)"
-              :disabled="scope.row.token_required > tokenNumber ||  scope.row.grade == scope.row.maxGrade">request resubmission</el-button>
+              :disabled="scope.row.token_required > tokenNumber ||  scope.row.grade == scope.row.maxGrade ||scope.row.status == 'overdue' ">request resubmission</el-button>
             </template>
           </el-table-column>
     </el-table>
@@ -51,7 +51,7 @@ import { watch } from 'fs';
         filters: {
       forStatus(tableData) {
               return tableData.filter(function (item) {
-          if (item.status == "none") {
+          if (item.status == "none" || item.status == "overdue") {
                     return item;
                   }
               })
