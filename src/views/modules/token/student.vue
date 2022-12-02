@@ -63,7 +63,7 @@ import { watch } from 'fs';
         url: this.$http.adornUrl('/token/tokens/' + this.userId),
             method: 'get',
           }).then(({ data }) => {
-            console.log("total number", data)
+            // console.log("total number", data)
             this.tokenNumber = data.token_count
           }).catch((e) => {
           console.log(e)        
@@ -85,12 +85,12 @@ import { watch } from 'fs';
         url: this.$http.adornUrl('/token/assignment_status/'+ this.userId),
           method: 'get',
         }).then(({ data }) => {
-          console.log(data)
+          // console.log(data)
           this.tableData = data
         })
       },
     OverideAssignment() {
-        log.console("hello")
+        // log.console("hello")
        },
     open(data, index) {
           this.$confirm('Do you want a resubmission?', 'Alert', {
@@ -98,8 +98,9 @@ import { watch } from 'fs';
           cancelButtonText: 'No',
           type: 'warning'
         }).then(() => {
-          var assignment_id = 33741790
         //to do 
+          console.log('studentid', this.userId, 'assignment_id', data.assignment_id,
+                'token_count', data.token_required,)
           this.$http({
           url: this.$http.adornUrl('/token/use_token/' + this.userId ),
           method: 'post',
@@ -107,19 +108,28 @@ import { watch } from 'fs';
                 'assignment_id': data.assignment_id,
                 'token_count': data.token_required,
               })
-        })
-      }).then(() => {
-          data.status = "submitted"
+        }).then((response)=>{
+          // console.log(response.data)
+          if (response.data.assignment_id != "failed")
+          {
+            data.status = "submitted"
           // this.$set(this.tableData,index,row)
-          console.log(data.token_required)
+          // console.log(data.token_required)
            this.tokenNumber = this.tokenNumber - data.token_required,
-           window.open('https:\\canvas.instructure.com/courses/3737733/assignments/'+ data.resubmission_id, '_blank'),
+           window.open('https:\\canvas.instructure.com/courses/3737737/assignments/'+ data.resubmission_id, '_blank'),
            this.$message({
             type: 'success',
             message: 'get a resubmission link!'
           })
-      }
-        ).catch((e) => {
+          }
+          else{
+            this.$message({
+            type: 'info',
+            message: response.data.message
+          });     
+          }
+        })
+      }).catch((e) => {
           console.log(e)
           this.$message({
             type: 'info',
