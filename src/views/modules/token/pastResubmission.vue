@@ -1,4 +1,6 @@
 <template>
+  <div>
+    <el-button @click="getAssignmentStatus()">Fresh </el-button>  
     <el-table
       :data="tableData|forStatus"
       style="width: 100%">
@@ -33,6 +35,7 @@
         width="150">
       </el-table-column>
     </el-table>
+  </div>
   </template>
 
   <script>
