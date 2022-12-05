@@ -44,8 +44,11 @@ export default {
     methods: {  
         getLogsById() {
             this.$http({
-                url: this.$http.adornUrl('/token/logs/'+this.dataForm.student_id),
-                method: 'get',
+                url: this.$http.adornUrl('/token/logs/'),
+                method: 'post',
+                data: this.$http.adornData({
+                    'name': this.dataForm.student_id
+              })
             }).then(({ data }) => {
                 this.tableData = data
             })
