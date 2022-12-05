@@ -8,6 +8,8 @@
  *  1. 打包只会包含释放(解开注释)的组件, 减少打包文件大小
  */
 import Vue from 'vue'
+import lang from 'element-ui/lib/locale/lang/en'
+import locale from 'element-ui/lib/locale'
 import {
   Pagination,
   Dialog,
@@ -77,7 +79,7 @@ import {
   Message,
   Notification
 } from 'element-ui'
-
+locale.use(lang)
 Vue.use(Pagination)
 Vue.use(Dialog)
 Vue.use(Autocomplete)
