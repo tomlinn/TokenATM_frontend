@@ -7,25 +7,22 @@
                     <span>empty~</span>
                 </el-empty>
             </template>
-            <el-table-column prop="user_id" label="Student id" width="180">
+            <el-table-column prop="id" label="id" width="180">
             </el-table-column>
-            <el-table-column prop="user_name" label="Student name" width="180">
+            <el-table-column prop="configType" label="Config Type" width="180">
             </el-table-column>
-            <el-table-column prop="token_count" label="Student tokens" width="180">
+            <el-table-column prop="configName" label="Config Name" width="180">
             </el-table-column>
-            <el-table-column prop="user_email" label="Student Email" width="180">
+            <el-table-column prop="datetime" label="Date time" width="180">
             </el-table-column>
             <el-table-column header-align="center" align="center" label="operation">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="updateToken(scope.row.user_id)">update token</el-button>
+                    <el-button type="text" size="small" @click="updateConfig(scope.row.id)">update</el-button>
                     <el-dialog :visible.sync="dialogVisible">
-                        set token ammount
-                        <el-input v-model="dataForm.tokenNum" placeholder="token"></el-input>
+                        set Config Name
+                        <el-input v-model="dataForm.config_name" placeholder="config name"></el-input>
                         <el-button @click="submit()">confirm
                         </el-button>
-                    </el-dialog>
-                    <el-dialog :visible.sync="loadingVisible">
-                        Loading
                     </el-dialog>
                 </template>
             </el-table-column>
@@ -46,9 +43,7 @@ export default {
             dataForm: {
                 tokenNum: 0,
                 user_id: 0
-            },
-            loadingVisible: false
-            
+            }
         };
     },
     computed: {},
@@ -56,7 +51,7 @@ export default {
     methods: {
         getCourses() {
             this.$http({
-                url: this.$http.adornUrl('/token/students'),
+                url: this.$http.adornUrl('/token/config'),
                 method: 'get',
 
             }).then(({ data }) => {
@@ -65,11 +60,11 @@ export default {
         },
         submit() {
             this.$http({
-                url: this.$http.adornUrl('/token/update'),
+                url: this.$http.adornUrl('/token/config/update'),
                 method: 'post',
                 params: this.$http.adornParams({
-                    'studentId': this.dataForm.user_id,
-                    'tokenNum': this.dataForm.tokenNum
+                    'id': this.dataForm.id,
+                    'config_name': this.dataForm.config_name
                 })
             }).then(({ data }) => {
                 // if (data && data.code === 0) {
@@ -89,18 +84,16 @@ export default {
                 this.getCourses()
             })
         },
-        updateToken(student_id) {
+        updateConfig(id) {
             this.dialogVisible = true
-            this.dataForm.user_id = student_id
+            this.dataForm.id = id
         },
         sync() {
-            this.loadingVisible = true
             this.$http({
                 url: this.$http.adornUrl('/token/sync'),
                 method: 'get'
             }).then(({ data }) => {
                 alert("sync successfully")
-                this.loadingVisible = false
             })
         }
     },
