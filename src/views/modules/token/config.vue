@@ -7,15 +7,15 @@
                     <span>empty~</span>
                 </el-empty>
             </template>
-            <el-table-column prop="id" label="id" width="180">
+            <el-table-column prop="id" label="id" width="50">
             </el-table-column>
-            <el-table-column prop="configType" label="Config Type" width="180">
+            <el-table-column prop="configType" label="Config Type" width="210">
             </el-table-column>
-            <el-table-column prop="configName" label="Config Name" width="180">
+            <el-table-column prop="configName" label="Config Name" width="400">
             </el-table-column>
             <el-table-column prop="datetime" label="Date time" width="180">
             </el-table-column>
-            <el-table-column header-align="center" align="center" label="operation">
+            <el-table-column header-align="center" align="center" label="operation" width="180">
                 <template slot-scope="scope">
                     <el-button type="text" size="small" @click="updateConfig(scope.row.id)">update</el-button>
                     <el-dialog :visible.sync="dialogVisible">
