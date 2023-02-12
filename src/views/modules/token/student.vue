@@ -6,7 +6,7 @@
       <el-button type="info" icon="el-icon-message" circle @click="contact"></el-button>
     </el-row>  
         <div class="form-group">
-      <el-table :data="tableData | forStatus" style="width: 100%">
+      <el-table :data="tableData | forStatus" style="width: 100%" v-loading="dataListLoading">
         <template slot="empty">
                 <el-empty description="empty">
                     <span>empty~</span>
@@ -32,7 +32,15 @@
           </el-table-column>
     </el-table>
         </div>
-    
+    <el-dialog
+      title="Resubmission Request"
+      :visible.sync="dialogVisible"
+      :append-to-body="true">
+      <span v-html="message"></span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false">Close</el-button>
+      </span>
+    </el-dialog>
     </div>
     
       </template>
@@ -46,6 +54,7 @@ import { watch } from 'fs';
               tableData: [],
               tokenNumber: 0,
               userId: this.$store.state.user.studentID,
+              dataListLoading: false
             }
           },
         filters: {
@@ -81,18 +90,21 @@ import { watch } from 'fs';
         });
       },
         getAssignmentStatus() {
+        this.dataListLoading = true
         this.$http({
         url: this.$http.adornUrl('/token/assignment_status/'+ this.userId),
           method: 'get',
         }).then(({ data }) => {
           // console.log(data)
           this.tableData = data
+          this.dataListLoading = false
         })
       },
     OverideAssignment() {
         // log.console("hello")
        },
     open(data, index) {
+          this.dataListLoading = true
           this.$confirm('Do you want a resubmission?', 'Alert', {
           confirmButtonText: 'Yes',
           cancelButtonText: 'No',
@@ -116,11 +128,9 @@ import { watch } from 'fs';
           // this.$set(this.tableData,index,row)
           // console.log(data.token_required)
            this.tokenNumber = this.tokenNumber - data.token_required,
-           window.open('https:\\canvas.instructure.com/courses/3737737/assignments/'+ data.resubmission_id, '_blank'),
-           this.$message({
-            type: 'success',
-            message: 'get a resubmission link!'
-          })
+          // window.open('https:\\canvas.instructure.com/courses/3737737/assignments/'+ data.resubmission_id, '_blank'),
+            this.message = 'Success!<br> Your Resubmission link is ' + '<a href="https://canvas.instructure.com/courses/3737737/assignments/' + data.resubmission_id + '">https://canvas.instructure.com/courses/3737737/assignments/' + data.resubmission_id + '</a>';
+            this.dialogVisible = true
           }
           else{
             this.$message({
@@ -128,13 +138,15 @@ import { watch } from 'fs';
             message: response.data.message
           });     
           }
+          this.dataListLoading = false
         })
       }).catch((e) => {
           console.log(e)
           this.$message({
             type: 'info',
             message: 'Cancel'
-          });          
+          });
+          this.dataListLoading = false    
         });
       }
       },
