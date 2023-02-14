@@ -22,7 +22,7 @@
       </el-table-column>
         <el-table-column prop="token_required" label="Token Required" width="150">
       </el-table-column>
-        <el-table-column prop="deadline" label="Deadline" width="150">
+        <el-table-column prop="deadline" label="Deadline" width="180">
       </el-table-column>
         <el-table-column header-align="center" align="left" width="150" label="Resubmit">
             <template slot-scope="scope">
@@ -96,7 +96,10 @@ import { watch } from 'fs';
           method: 'get',
         }).then(({ data }) => {
           // console.log(data)
-          this.tableData = data
+          this.tableData = data.map(d => {
+                    d.deadline = new Date(d.deadline).toLocaleString();
+                    return d;
+                });
           this.dataListLoading = false
         })
       },

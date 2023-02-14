@@ -44,7 +44,11 @@ export default {
                 url: this.$http.adornUrl('/token/logs/' +  this.$store.state.user.studentID),
                 method: 'get',
             }).then(({ data }) => {
-                this.tableData = data
+                console.log(data)
+                this.tableData = data.map(d => {
+                    d.timestamp = new Date(d.timestamp).toLocaleString();
+                    return d;
+                });
             })
         }
     },
