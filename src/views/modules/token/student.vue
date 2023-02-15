@@ -38,7 +38,7 @@
       :append-to-body="true">
       <span v-html="message"></span>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogVisible = false">Close</el-button>
+        <el-button type="primary" @click="this.dialogVisible = false">Close</el-button>
       </span>
     </el-dialog>
     </div>
@@ -54,7 +54,8 @@ import { watch } from 'fs';
               tableData: [],
               tokenNumber: 0,
               userId: this.$store.state.user.studentID,
-              dataListLoading: false
+              dataListLoading: false,
+              dialogVisible: false
             }
           },
         filters: {
