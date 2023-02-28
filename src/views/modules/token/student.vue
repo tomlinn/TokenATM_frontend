@@ -24,9 +24,9 @@
       </el-table-column>
         <el-table-column prop="deadline" label="Deadline" width="180">
       </el-table-column>
-        <el-table-column header-align="center" align="left" width="150" label="Resubmit">
+        <el-table-column header-align="center" align="left" width="160" label="Resubmit">
             <template slot-scope="scope">
-            <el-button  type="text" size="small" @click="open(scope.row, scope.$index)"
+            <el-button  type="primary" size="small" @click="open(scope.row, scope.$index)"
               :disabled="scope.row.token_required > tokenNumber ||  scope.row.grade == scope.row.maxGrade ||scope.row.status == 'overdue' ">request resubmission</el-button>
             </template>
           </el-table-column>
@@ -115,12 +115,12 @@ import { watch } from 'fs';
           type: 'warning'
         }).then(() => {
         //to do 
-          console.log('studentid', this.userId, 'assignment_id', data.assignment_id,
-                'token_count', data.token_required,)
+          console.log(data)
           this.$http({
-          url: this.$http.adornUrl('/token/use_token/' + this.userId ),
+          url: this.$http.adornUrl('/token/request/'),
           method: 'post',
           data: this.$http.adornData({
+                'user_id': this.userId,
                 'assignment_id': data.assignment_id,
                 'token_count': data.token_required,
               })
@@ -131,10 +131,14 @@ import { watch } from 'fs';
             data.status = "submitted"
           // this.$set(this.tableData,index,row)
           // console.log(data.token_required)
-           this.tokenNumber = this.tokenNumber - data.token_required,
+           this.tokenNumber = this.tokenNumber - data.token_required
           // window.open('https:\\canvas.instructure.com/courses/3737737/assignments/'+ data.resubmission_id, '_blank'),
-            this.message = 'Success!<br> Your Resubmission link is ' + '<a href="https://canvas.instructure.com/courses/3737737/assignments/' + data.resubmission_id + '">https://canvas.instructure.com/courses/3737737/assignments/' + data.resubmission_id + '</a>';
-            this.dialogVisible = true
+            // this.message = 'Success!<br> Your Resubmission link is ' + '<a href="https://canvas.instructure.com/courses/3737737/assignments/' + data.resubmission_id + '">https://canvas.instructure.com/courses/3737737/assignments/' + data.resubmission_id + '</a>';
+            // this.dialogVisible = true
+            this.$message({
+            type: 'info',
+            message: "Resubmission request is submitted"
+          });     
           }
           else{
             this.$message({
