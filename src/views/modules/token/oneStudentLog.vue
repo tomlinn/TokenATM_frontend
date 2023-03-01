@@ -14,7 +14,7 @@
             </el-table-column>
             <el-table-column prop="user_name" label="Student name">
             </el-table-column> -->
-            <el-table-column label="operation" prop="type" sortable  width="110">
+            <el-table-column label="operation" prop="type" sortable  width="130">
             </el-table-column>
             <el-table-column prop="tokenCount" label="token count" sortable>
             </el-table-column>

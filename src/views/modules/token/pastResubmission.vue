@@ -13,7 +13,7 @@
       <el-table-column
         prop="name"
         label="Assignment Name"
-        width="150">
+        width="160">
       </el-table-column>
       <el-table-column
         prop="grade"
@@ -35,10 +35,21 @@
         label="Token Required"
         width="150">
       </el-table-column>
-      <el-table-column header-align="center" align="left" width="150" label="Undo">
+      <el-table-column header-align="center" align="center" width="300" label="Action">
             <template slot-scope="scope">
-            <el-button  type="text" size="small" @click="cancel(scope.row, scope.$index)"
-              >Undo resubmission</el-button>
+            <el-button
+              type="danger"
+              size="small"
+              @click="cancel(scope.row, scope.$index)">
+              Cancel resubmission
+            </el-button>
+            <el-button
+            v-if="scope.row.status === 'Approved'"
+            type="primary"
+            size="small"
+            @click="openResubmissionLink(scope.row.resubmission_id)">
+            Link
+          </el-button>
             </template>
           </el-table-column>
     </el-table>
@@ -58,7 +69,7 @@
       filters: {
 		    forStatus(listData){
 		        return listData.filter(function (item) {
-		            if(item.status == "requested"){
+		            if(item.status == "Approved" ||item.status == "Pending"){
 		                return item;
 		            }
 		        })
@@ -67,18 +78,18 @@
       methods: {
       cancel(data, index) {
           this.dataListLoading = true
-          this.$confirm('Do you want a resubmission?', 'Alert', {
+          this.$confirm('Do you want cancel a resubmission?', 'Alert', {
           confirmButtonText: 'Yes',
           cancelButtonText: 'No',
           type: 'warning'
         }).then(() => {
-        //to do 
-          console.log('studentid', this.userId, 'assignment_id', data.assignment_id,
-                'token_count', data.token_required,)
+          //to do 
+          console.log(data)
           this.$http({
-          url: this.$http.adornUrl('/token/cancel_token/' + this.userId ),
+          url: this.$http.adornUrl('/token/cancel/'),
           method: 'delete',
           data: this.$http.adornData({
+                'user_id': this.userId,
                 'assignment_id': data.assignment_id,
                 'token_count': data.token_required,
               })
@@ -114,6 +125,9 @@
           this.dataListLoading = false        
         });
     },
+      openResubmissionLink(resubmission_id) {
+        window.open("https://canvas.instructure.com/courses/3737737/assignments/"+resubmission_id, '_blank');
+      },
       getAssignmentStatus() {
         this.dataListLoading = true
         this.$http({
