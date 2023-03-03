@@ -1,21 +1,21 @@
 <template>
     <div>
         <el-button type="primary" @click="showDialog">Add New Config</el-button>
-        <el-table :data="tableData" border style="width: 100%">
+        <el-table :data="tableData" border width="100%">
             <template slot="empty">
                 <el-empty description="empty">
                     <span>empty~</span>
                 </el-empty>
             </template>
-            <el-table-column prop="id" label="id" width="50">
+            <el-table-column prop="id" label="id" :min-width="10" sortable>
             </el-table-column>
-            <el-table-column prop="configType" label="Config Type" width="210">
+            <el-table-column prop="configType" label="Config Type" :min-width="20" sortable>
             </el-table-column>
-            <el-table-column prop="configName" label="Config Name" width="400">
+            <el-table-column prop="configName" label="Config Name" :min-width="30" sortable>
             </el-table-column>
-            <el-table-column prop="timestamp" label="Last modified date" width="180">
+            <el-table-column prop="timestamp" label="last modified date" :min-width="20" sortable>
             </el-table-column>
-            <el-table-column header-align="center" align="center" label="operation" width="180">
+            <el-table-column header-align="center" align="center" label="operation" :min-width="20">
                 <template slot-scope="scope">
                     <el-button type="primary" size="small" @click="updateConfig(scope.row.id)">update</el-button>
                     <el-button type="danger" size="small" @click="deleteConfig(scope.row.id)">delete</el-button>
