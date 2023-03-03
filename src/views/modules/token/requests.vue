@@ -162,7 +162,7 @@ export default {
           // console.log(response.data)
           if (response.data.assignmentId != "failed")
           {
-            data.status = "submitted"
+            data.status = "Cancelled"
           // this.$set(this.tableData,index,row)
           // console.log(data.token_required)
            // auto-open

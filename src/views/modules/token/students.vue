@@ -17,7 +17,7 @@
             </el-table-column>
             <el-table-column header-align="center" align="center" label="operation">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="updateToken(scope.row.user_id)">update token</el-button>
+                    <el-button type="primary" size="small" @click="updateToken(scope.row.user_id)">update token</el-button>
                     <el-dialog :visible.sync="dialogVisible">
                         set token ammount
                         <el-input v-model="dataForm.tokenNum" placeholder="token"></el-input>
