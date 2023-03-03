@@ -1,6 +1,8 @@
 <template>
     <div>
-        <el-button type="primary" @click="showDialog">Add New Config</el-button>
+        <div style="margin-bottom : 10px">
+            <el-button type="primary" @click="showDialog">Add New Config</el-button>
+        </div>
         <el-table :data="tableData" border width="100%">
             <template slot="empty">
                 <el-empty description="empty">
