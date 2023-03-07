@@ -1,26 +1,25 @@
 <template>
     <div>
-        <el-button @click="getLogs()">Fresh </el-button> 
-        <el-table :data="tableData" border style="width: 100%" >
+        <div style="margin-bottom : 10px">
+            <el-button type="primary" @click="getLogs()">Refresh </el-button>
+        </div>
+        <div style="display:block; padding-bottom: 10px;">
+            <el-input v-model="dataForm.search_text" placeholder="Filter ex. Bonald Dren, Module 1">
+            </el-input>
+        </div>
+        <el-table :data="filteredTableData" border width="100%">
             <template slot="empty">
                 <el-empty description="empty">
                     <span>empty~</span>
                 </el-empty>
             </template>
-
-            <!-- <el-table-column prop="id" label="Log id">
+            <el-table-column label="operation" prop="type" :min-width="25" sortable>
             </el-table-column>
-            <el-table-column prop="userId" label="Student id">
+            <el-table-column prop="tokenCount" label="token count" :min-width="25" sortable>
             </el-table-column>
-            <el-table-column prop="user_name" label="Student name">
-            </el-table-column> -->
-            <el-table-column label="operation" prop="type" sortable  width="130">
+            <el-table-column prop="source" label="assignment" :min-width="25" sortable>
             </el-table-column>
-            <el-table-column prop="tokenCount" label="token count" sortable>
-            </el-table-column>
-            <el-table-column prop="source" label="assignment" sortable>
-            </el-table-column>
-            <el-table-column prop="timestamp" label="timestamp" sortable>
+            <el-table-column prop="timestamp" label="timestamp" :min-width="25" sortable>
             </el-table-column>
         </el-table>
 
@@ -33,15 +32,31 @@ export default {
     props: {},
     data() {
         return {
+            dataForm: {
+                search_text: ""
+            },
             tableData: []
         };
     },
-    computed: {},
+    computed: {
+        filteredTableData() {
+            const searchText = this.dataForm.search_text.toLowerCase();
+            return this.tableData.filter(
+                (row) =>
+                    Object.values(row).some(
+                        (value) =>
+                            value &&
+                            typeof value === "string" &&
+                            value.toLowerCase().includes(searchText)
+                    )
+            );
+        }
+    },
     watch: {},
     methods: {
         getLogs() {
             this.$http({
-                url: this.$http.adornUrl('/token/logs/' +  this.$store.state.user.studentID),
+                url: this.$http.adornUrl('/token/logs/' + this.$store.state.user.studentID),
                 method: 'get',
             }).then(({ data }) => {
                 console.log(data)
@@ -64,11 +79,11 @@ export default {
 }
 </script>
 <style>
-  .el-table .warning-row {
+.el-table .warning-row {
     background: oldlace;
-  }
+}
 
-  .el-table .success-row {
+.el-table .success-row {
     background: #f0f9eb;
-  }
+}
 </style>

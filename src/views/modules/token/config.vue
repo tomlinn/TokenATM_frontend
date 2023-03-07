@@ -1,7 +1,11 @@
 <template>
     <div>
         <div style="margin-bottom : 10px">
-            <el-button type="primary" @click="showDialog">Add New Config</el-button>
+            <el-button type="primary" @click="showAddDialog">Add New Config</el-button>
+            <el-button type="succsss" @click="resetFilter">All Config</el-button>
+            <el-button type="succsss" @click="filterQuizConfig">Quiz Config</el-button>
+            <el-button type="succsss" @click="filterqQaltricsConfig">Qualtrics Config</el-button>
+            <el-button type="succsss" @click="filterCanvasConfig">Canvas Config</el-button>
         </div>
         <el-table :data="tableData" border width="100%">
             <template slot="empty">
@@ -19,29 +23,29 @@
             </el-table-column>
             <el-table-column header-align="center" align="center" label="operation" :min-width="20">
                 <template slot-scope="scope">
-                    <el-button type="primary" size="small" @click="updateConfig(scope.row.id)">update</el-button>
+                    <el-button type="primary" size="small" @click="showUpdateDialog(scope.row.id)">update</el-button>
                     <el-button type="danger" size="small" @click="deleteConfig(scope.row.id)">delete</el-button>
                 </template>
             </el-table-column>
-            
+
         </el-table>
         <el-dialog :visible.sync="dialogVisible">
             <span class="title_Dialog">Update Config</span>
             <el-form ref="dataForm" :model="dataForm">
                 <el-form-item label="Config Name">
-                <el-input v-model="dataForm.config_name"></el-input>
+                    <el-input v-model="dataForm.config_name"></el-input>
                 </el-form-item>
             </el-form>
-            <el-button type="primary" @click="submit()">Confirm</el-button>
+            <el-button type="primary" @click="updateConfig()">Confirm</el-button>
         </el-dialog>
         <el-dialog header-align="center" align="center" :visible.sync="AddDialogVisible">
             <span class="title_Dialog">Add new Config</span>
             <el-form ref="formData" :model="formData">
                 <el-form-item label="Config Type">
-                <el-input v-model="formData.config_type"></el-input>
+                    <el-input v-model="formData.config_type"></el-input>
                 </el-form-item>
                 <el-form-item label="Config Name">
-                <el-input v-model="formData.config_name"></el-input>
+                    <el-input v-model="formData.config_name"></el-input>
                 </el-form-item>
             </el-form>
             <el-button type="primary" @click="addConfig()">Confirm</el-button>
@@ -56,8 +60,7 @@ export default {
     props: {},
     data() {
         return {
-            //            tableData: [{'user_id':"123", 'token_count':123, 'user_email':'123@gmail'},{'user_id':'345','token_count':123,user_email:'446@gmail.com'}],
-            tableData: [],
+           tableData: [],
             dialogVisible: false,
             dataForm: {
                 tokenNum: 0,
@@ -71,10 +74,11 @@ export default {
             AddDialogVisible: false
         };
     },
-    computed: {},
+    computed: {
+    },
     watch: {},
     methods: {
-        getCourses() {
+        loadConfig() {
             this.$http({
                 url: this.$http.adornUrl('/token/config'),
                 method: 'get',
@@ -86,7 +90,7 @@ export default {
                 });
             })
         },
-        submit() {
+        updateConfig() {
             this.$http({
                 url: this.$http.adornUrl('/token/config/update'),
                 method: 'post',
@@ -94,35 +98,35 @@ export default {
                     'id': this.dataForm.id,
                     'config_name': this.dataForm.config_name
                 })
-            }).then(({ data }) => {
-                // if (data && data.code === 0) {
-                //     this.$message({
-                //         message: 'success',
-                //         type: 'success',
-                //         duration: 1500,
-                //         onClose: () => {
-                //             this.dialogVisible = false
-                //             this.$emit('refreshDataList')
-                //         }
-                //     })
-                // } else {
-                //     this.$message.error(data.msg)
-                // }
-                this.dialogVisible=false
-                this.getCourses()
+            }).then((response ) => {
+                console.log(response);
+                if (response.status == 200) {
+                    this.$message({
+                        message: 'Config has been deleted',
+                        type: 'success',
+                        duration: 1500,
+                        onClose: () => {
+                            this.loadConfig()
+                        }
+                    })
+                } else {
+                    this.$message.error(response.msg)
+                }
+                this.dialogVisible = false
+                this.loadConfig()
             })
         },
         deleteConfig(id) {
             this.$confirm('Are you sure to delete this config?', 'Warning', {
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Cancel',
-            type: 'warning'
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
             }).then(() => {
                 this.$http({
                     url: this.$http.adornUrl('/token/config/delete'),
                     method: 'post',
                     params: this.$http.adornParams({ id })
-                }).then(( response ) => {
+                }).then((response) => {
                     console.log(response)
                     if (response.status == 200) {
                         this.$message({
@@ -130,7 +134,7 @@ export default {
                             type: 'success',
                             duration: 1500,
                             onClose: () => {
-                                this.getCourses()
+                                this.loadConfig()
                             }
                         })
                     } else {
@@ -141,7 +145,7 @@ export default {
                 // do nothing if the user cancels the deletion
             })
         },
-        updateConfig(id) {
+        showUpdateDialog(id) {
             const row = this.tableData.find(row => row.id === id);
             if (row) {
                 this.dataForm.config_name = row.configName;
@@ -149,8 +153,10 @@ export default {
                 this.dataForm.id = id;
             }
         },
-        showDialog() {
-            this.AddDialogVisible = true;
+        showAddDialog() {
+            this.AddDialogVisible = true
+            this.formData.config_type = ""
+            this.formData.config_name = ""
         },
         addConfig() {
             this.$http({
@@ -160,15 +166,40 @@ export default {
                     'config_type': this.formData.config_type,
                     'config_name': this.formData.config_name
                 })
-            }).then(() => {
-                this.AddDialogVisible = false;
-                this.getCourses();
+            }).then((response) => {
+                console.log(response);
+                if (response.status == 200) {
+                    this.$message({
+                        message: 'Config has been created',
+                        type: 'success',
+                        duration: 1500,
+                        onClose: () => {
+                            this.loadConfig()
+                        }
+                    });
+                    this.AddDialogVisible = false
+                } else {
+                    this.$message.error(response.msg)
+                }
             });
+        },
+        filterQuizConfig() {
+            this.tableData  = this.tableData.filter(row => row.configType.startsWith('tokenQuiz'))
+        },
+        filterqQaltricsConfig() {
+            this.tableData  = this.tableData.filter(row => row.configType.toLowerCase().startsWith('qualtrics'))
+        },
+        filterCanvasConfig() {
+            this.tableData  = this.tableData.filter(row => row.configType.toLowerCase().startsWith('canvas'))
+        },
+        resetFilter() {
+            this.loadConfig()
         }
+        
     },
     created() { },
     mounted() {
-        this.getCourses()
+        this.loadConfig()
     },
     beforeCreated() { },
     beforeMounted() { },
@@ -182,7 +213,7 @@ export default {
 </script>
 <style lang='css' scoped>
 .title_Dialog {
-  font-weight: bold;
-  font-size: 18px;
+    font-weight: bold;
+    font-size: 18px;
 }
 </style>

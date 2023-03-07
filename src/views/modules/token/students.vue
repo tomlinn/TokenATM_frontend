@@ -1,35 +1,44 @@
 <template>
     <div>
-        <el-button @click="sync()">manually sync</el-button>
-        <el-table :data="tableData" border style="width: 100%">
+        <div style="margin-bottom : 10px">
+            <el-button type="primary" @click="sync()">manually sync</el-button>
+        </div>
+        <div style="display:block; padding-bottom: 10px;">
+            <el-input v-model="dataForm.search_text" placeholder="Filter ex. Bonald Dren, Module 1" >
+            </el-input>
+        </div>
+        <el-table :data="filteredTableData" border width="100%">
             <template slot="empty">
                 <el-empty description="empty">
                     <span>empty~</span>
                 </el-empty>
             </template>
-            <el-table-column prop="user_id" label="Student id" width="180">
+            <el-table-column prop="user_id" label="Student id" :min-width="10" sortable>
             </el-table-column>
-            <el-table-column prop="user_name" label="Student name" width="180">
+            <el-table-column prop="user_name" label="Student name" :min-width="20" sortable>
             </el-table-column>
-            <el-table-column prop="token_count" label="Student tokens" width="180">
+            <el-table-column prop="token_count" label="Student tokens" :min-width="20" sortable>
             </el-table-column>
-            <el-table-column prop="user_email" label="Student Email" width="180">
+            <el-table-column prop="user_email" label="Student Email" :min-width="30" sortable>
             </el-table-column>
-            <el-table-column header-align="center" align="center" label="operation">
+            <el-table-column header-align="center" align="center" :min-width="20" label="operation">
                 <template slot-scope="scope">
                     <el-button type="primary" size="small" @click="updateToken(scope.row.user_id)">update token</el-button>
-                    <el-dialog :visible.sync="dialogVisible">
-                        set token ammount
-                        <el-input v-model="dataForm.tokenNum" placeholder="token"></el-input>
-                        <el-button @click="submit()">confirm
-                        </el-button>
-                    </el-dialog>
-                    <el-dialog :visible.sync="loadingVisible">
-                        Loading
-                    </el-dialog>
                 </template>
             </el-table-column>
         </el-table>
+        <el-dialog header-align="center" align="center"  :visible.sync="dialogVisible">
+            <span class="title_Dialog">Update Token Amount</span>
+            <el-form ref="dataForm" :model="dataForm">
+                <el-form-item label="Token Amount">
+                <el-input v-model="dataForm.tokenNum" placeholder="token"></el-input>
+                </el-form-item>
+            </el-form>
+            <el-button type="primary" @click="submit()">Confirm</el-button>
+        </el-dialog>
+        <el-dialog :visible.sync="loadingVisible">
+            Loading
+        </el-dialog>
     </div>
 </template>
   
@@ -45,16 +54,30 @@ export default {
             dialogVisible: false,
             dataForm: {
                 tokenNum: 0,
-                user_id: 0
+                user_id: 0,
+                search_text: ""
             },
             loadingVisible: false
             
         };
     },
-    computed: {},
+    computed: {
+        filteredTableData() {
+            const searchText = this.dataForm.search_text.toLowerCase();
+            return this.tableData.filter(
+                (row) =>
+                Object.values(row).some(
+                    (value) =>
+                    value &&
+                    typeof value === "string" &&
+                    value.toLowerCase().includes(searchText)
+                )
+            );
+        }
+    },
     watch: {},
     methods: {
-        getCourses() {
+        getStudentList() {
             this.$http({
                 url: this.$http.adornUrl('/token/students'),
                 method: 'get',
@@ -71,27 +94,30 @@ export default {
                     'studentId': this.dataForm.user_id,
                     'tokenNum': this.dataForm.tokenNum
                 })
-            }).then(({ data }) => {
-                // if (data && data.code === 0) {
-                //     this.$message({
-                //         message: 'success',
-                //         type: 'success',
-                //         duration: 1500,
-                //         onClose: () => {
-                //             this.dialogVisible = false
-                //             this.$emit('refreshDataList')
-                //         }
-                //     })
-                // } else {
-                //     this.$message.error(data.msg)
-                // }
-                this.dialogVisible=false
-                this.getCourses()
+            }).then(( response ) => {
+                console.log(response)
+                if (response.status == 200) {
+                    this.$message({
+                        message: 'Token amount has been updated',
+                        type: 'success',
+                        duration: 1500,
+                        onClose: () => {
+                            this.dialogVisible = false
+                            this.getStudentList()
+                        }
+                    })
+                } else {
+                    this.$message.error(data.msg)
+                }
             })
         },
         updateToken(student_id) {
-            this.dialogVisible = true
-            this.dataForm.user_id = student_id
+            const row = this.tableData.find(row => row.user_id === student_id);
+            if (row) {
+                this.dataForm.tokenNum = row.token_count
+                this.dataForm.user_id = student_id
+                this.dialogVisible = true
+            }
         },
         sync() {
             this.loadingVisible = true
@@ -106,7 +132,7 @@ export default {
     },
     created() { },
     mounted() {
-        this.getCourses()
+        this.getStudentList()
     },
     beforeCreated() { },
     beforeMounted() { },
@@ -119,5 +145,8 @@ export default {
 
 </script>
 <style lang='css' scoped>
-
+    .title_Dialog {
+    font-weight: bold;
+    font-size: 18px;
+    }
 </style>
