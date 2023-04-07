@@ -3,22 +3,33 @@
     <div style="margin-bottom : 10px">
       <el-button type="primary" @click="getPendingRequests()">Refresh</el-button>
       <el-button type="primary" @click="approveAllRequest()">Approve All</el-button>
+      <el-button type="succsss" @click="resetFilter">All Request</el-button>
+      <el-button type="succsss" @click="filterApproved">Approved</el-button>
+      <el-button type="succsss" @click="filterPending">Pending</el-button>
+      <el-button type="succsss" @click="filterCancelled">Cancelled</el-button>
+      <el-button type="succsss" @click="filterRejected">Rejected</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" v-loading="dataListLoading" border>
+    <div style="display:block; padding-bottom: 10px;">
+        <el-input v-model="search_text" placeholder="Filter ex. Bonald Dren, Module 1" >
+        </el-input>
+    </div>
+    <el-table :data="filteredTableData" style="width: 100%" v-loading="dataListLoading" border>
       <template slot="empty">
         <el-empty description="empty">
           <span>No pending requests</span>
         </el-empty>
       </template>
-      <el-table-column prop="id" label="ID" :min-width="10">
+      <el-table-column prop="id" label="ID" :min-width="10" sortable>
       </el-table-column>
-      <el-table-column prop="assignmentId" label="Assignment ID" :min-width="10">
+      <el-table-column prop="assignmentId" label="Assignment ID" :min-width="10" sortable>
       </el-table-column>
-      <el-table-column prop="studentId" label="Student ID" :min-width="10">
+      <el-table-column prop="studentName" label="Student Name" :min-width="10" sortable>
       </el-table-column>
-      <el-table-column prop="tokenCount" label="Token Count" :min-width="10">
+     <el-table-column prop="studentId" label="Student ID" :min-width="10" sortable>
       </el-table-column>
-      <el-table-column prop="status" label="Status" :min-width="10">
+      <el-table-column prop="tokenCount" label="Token Count" :min-width="10" sortable>
+      </el-table-column>
+      <el-table-column prop="status" label="Status" :min-width="10" sortable>
       </el-table-column>
       <el-table-column label="Action" :min-width="20">
         <template slot-scope="scope">
@@ -31,7 +42,7 @@
           <el-tag v-else-if="scope.row.status === 'Approved'" @click="cancel(scope.row, scope.$index)" type="danger">
             Revoke
           </el-tag>
-          <el-tag v-else-if="scope.row.status === 'rejected'" type="danger">
+          <el-tag v-else-if="scope.row.status === '(Rejected)'" type="danger">
             Rejected
           </el-tag>
         </template>
@@ -45,9 +56,26 @@ export default {
   data() {
     return {
       tableData: [],
+      cleanTableData: [],
       dataListLoading: false,
+      search_text: ""
     };
   },
+  computed: {
+        filteredTableData() {
+          const searchText = this.search_text.toLowerCase();
+          console.log(searchText)
+          return this.tableData.filter(
+            (row) =>
+              Object.values(row).some(
+                (value) =>
+                  value &&
+                  typeof value === "string" &&
+                  value.toLowerCase().includes(searchText)
+              )
+          );
+        }
+    },
   methods: {
     getPendingRequests() {
       this.dataListLoading = true;
@@ -56,6 +84,7 @@ export default {
         method: 'get',
       }).then(({ data }) => {
         this.tableData = data;
+        this.cleanTableData = this.tableData;
         this.dataListLoading = false;
       });
     },
@@ -137,11 +166,26 @@ export default {
         data: {
           request_id: request.id,
         },
-      }).then(() => {
-        this.tableData.splice(this.tableData.indexOf(request), 1);
-        this.loading = false;
-      }).catch(() => {
-        this.loading = false;
+      }).then((response) => {
+          console.log(response);
+          if (response.data.assignment_id != "failed") {
+            request.status = '(Rejected)';
+            this.$message({
+              type: 'success',
+              message: 'Request rejected',
+            });
+          } else {
+            this.$message({
+              type: 'info',
+              message: response.data.message
+            })
+          }
+        }).catch((error) => {
+          console.log(error.response);
+          this.$message({
+            type: 'warning',
+            message: 'Error: ' + error.response.data,
+          });
         });
     },
     cancel(data, index) {
@@ -191,6 +235,21 @@ export default {
         this.dataListLoading = false
       });
     },
+    filterApproved() {
+        this.tableData  = this.cleanTableData.filter(row => row.status.startsWith('Approved'))
+    },
+    filterPending() {
+        this.tableData  = this.cleanTableData.filter(row => row.status.startsWith('Pending'))
+    },
+    filterCancelled() {
+        this.tableData  = this.cleanTableData.filter(row => row.status.startsWith('Cancelled'))
+    },
+    filterRejected() {
+        this.tableData  = this.cleanTableData.filter(row => row.status.startsWith('Rejected'))
+    },
+    resetFilter() {
+        this.getPendingRequests()
+    }
   },
   mounted() {
     this.getPendingRequests();
