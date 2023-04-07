@@ -2,6 +2,7 @@
   <div>
     <div style="margin-bottom : 10px">
       <el-button type="primary" @click="getPendingRequests()">Refresh</el-button>
+      <el-button type="primary" @click="approveAllRequest()">Approve All</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%" v-loading="dataListLoading" border>
       <template slot="empty">
@@ -95,6 +96,39 @@ export default {
         });
       });
     },
+    approveAllRequest() {
+      this.$confirm(`Do you want to approve all requests?`, 'Alert', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        type: 'warning',
+      }).then(() => {
+        this.$http({
+          url: this.$http.adornUrl(`/token/requests/approveall`),
+          method: 'post',
+        }).then((response) => {
+          console.log(response);
+          if (response.data.assignment_id != "failed") {
+            this.getPendingRequests();
+          } else {
+            this.$message({
+              type: 'info',
+              message: response.data.message
+            })
+          }
+        }).catch((error) => {
+          console.log(error.response);
+          this.$message({
+            type: 'warning',
+            message: 'Error: ' + error.response.data,
+          });
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Approval canceled',
+        });
+      });
+    },
     rejectRequest(request) {
       this.loading = true;
       this.$http({
@@ -108,7 +142,7 @@ export default {
         this.loading = false;
       }).catch(() => {
         this.loading = false;
-      });
+        });
     },
     cancel(data, index) {
       this.dataListLoading = true
